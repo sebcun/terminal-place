@@ -40,6 +40,23 @@ def init_db():
     conn.close()
 
 
+# API Endpoint /api/info RETURNS all BOARD SIZE and pixels placed.
+@app.route("/api/info", methods=["GET"])
+def get_info():
+    # Get data from database
+    conn = get_db()
+    pixel_count = conn.execute("SELECT COUNT(*) FROM pixels").fetchone()[0]
+    conn.close()
+
+    # Return success with data
+    return (
+        jsonify(
+            {"pixels_placed": pixel_count, "board_height": HEIGHT, "board_width": WIDTH}
+        ),
+        200,
+    )
+
+
 # API Endpoint /api/pixels RETURNS all pixels in a json format.
 @app.route("/api/pixels", methods=["GET"])
 def get_pixels():
