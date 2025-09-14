@@ -78,10 +78,6 @@ def place_pixel():
     y = data["y"]
     color = data["color"]
 
-    # Validate that all fields are sent to create a pixel
-    if not x or not y or not color:
-        return jsonify({"error": "All fields required."}), 400
-
     # Validate the X and Y are valid/within boundaries
     if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT:
         return jsonify({"error": "Pixel coordinates are out of bounds."}), 400
