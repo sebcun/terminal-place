@@ -1,12 +1,35 @@
 # Imports
 import requests
-import colorama
-from colorama import Fore, Back, Style
 import os
 import time
+import random
 
 # Constants
 API = "http://localhost:5000"
+COLORS = {
+    # Foreground Colors
+    "BLACK": "\033[30m",
+    "RED": "\033[31m",
+    "GREEN": "\033[32m",
+    "YELLOW": "\033[33m",
+    "BLUE": "\033[34m",
+    "MAGENTA": "\033[35m",
+    "CYAN": "\033[36m",
+    "WHITE": "\033[37m",
+    # Background Colors
+    "BG_BLACK": "\033[40m",
+    "BG_RED": "\033[41m",
+    "BG_GREEN": "\033[42m",
+    "BG_YELLOW": "\033[43m",
+    "BG_BLUE": "\033[44m",
+    "BG_MAGENTA": "\033[45m",
+    "BG_CYAN": "\033[46m",
+    "BG_WHITE": "\033[47m",
+    # Styles
+    "RESET": "\033[0m",
+    "BOLD": "\033[1m",
+}
+colors = ["BLACK", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "WHITE"]
 
 
 # Function: get_info(), makes connection to database/server and returns pixel count and board info
@@ -42,17 +65,7 @@ def print_name(x, y):
   \__\___|_|  |_| |_| |_|_|_| |_|\__,_|_|_|    |_|\__,_|\___\___|
 
 """
-        + Fore.GREEN
-        + f"LAST UPDATED: {formatted_time}"
-        + Style.DIM
-        + " | "
-        + Style.NORMAL
-        + "GITHUB: https://github.com/sebcun/terminal-place\n"
-        + f"API SERVER: {API}"
-        + Style.DIM
-        + " | "
-        + Style.NORMAL
-        + f"BOARD SIZE: {x} x {y}"
+        + f"{COLORS["GREEN"]} LAST UPDATED: {formatted_time} {COLORS["BOLD"]}| {COLORS["RESET"]}{COLORS["GREEN"]}GITHUB: https://github.com/sebcun/terminal-place\n{COLORS["GREEN"]} API SERVER: {API}{COLORS["BOLD"]} | {COLORS["RESET"]}{COLORS["GREEN"]}BOARD SIZE: {x}x{y}{COLORS["RESET"]}"
     )
 
 
@@ -61,19 +74,23 @@ def draw_board(cursor_x, cursor_y, board_width, board_height):
     os.system("cls")
     print_name(board_width, board_height)
     # Top Row
-    print(Style.BRIGHT + "+" + "-" * board_width + "+")
+    print(f"{COLORS["GREEN"]}+{"-" * board_width}+{COLORS["RESET"]}")
 
     # Create Main Board
     for y in range(board_height):
-        row = "|"
+        row = f"{COLORS["GREEN"]}|{COLORS["RESET"]}"
         for x in range(board_width):
-            row += " "
-        row += "|"
+            if (x, y) == (cursor_x, cursor_y):
+                row += "@"
+            else:
+                random_color = random.choice(colors)
+                row += f"{COLORS[f"BG_{random_color}"]} {COLORS["RESET"]}"
+        row += f"{COLORS["GREEN"]}|{COLORS["RESET"]}"
         print(row)
 
     # Bottom Row
-    print("+" + "-" * board_width + "+")
-    print(Fore.RESET + "WASD=Move | P=Place | Q=Quit")
+    print(f"{COLORS["GREEN"]}+{"-" * board_width}+{COLORS["RESET"]}")
+    print("WASD=Move | P=Place | Q=Quit")
 
 
 # Function main(), starts the main logic loop
